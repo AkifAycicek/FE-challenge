@@ -1,0 +1,139 @@
+.input-group{
+  position: relative;
+  display: inline-flex;
+  flex-direction: column;
+  gap: .2rem;
+  width: fit-content;
+  margin: $input_group_margin_y $input_group_margin_x;
+
+  &[loading]:not([loading=false]){
+    .inputbox, .selectbox, .btn, button{
+      cursor: wait !important;
+    }
+  }
+
+  &[error]:not([error=false]){
+    margin-bottom: $input_group_margin_y * 5 !important;
+
+    .inputbox, .selectbox, .btn, button{
+      &:not(.btn, button){
+      color: $error !important;
+    }
+      border-color: $error !important;
+      &::placeholder{
+        color: $error !important;
+      }
+    }
+
+    .input-group-error-text{
+      position: absolute;
+      top:100%;
+      margin-left: calc($spacer / 2);
+      color: $error;
+      max-width: calc(100% - $spacer / 2);
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+  }
+
+  &-label{
+    font-size: $input_group_label_font_size;
+    color: $dark;
+    font-weight: 700;
+    margin-bottom: 7px;
+  }
+
+  &-icon {
+    max-width: max-content;
+    max-height: min-content;
+    z-index: 2;
+    position: absolute;
+    left: $input_padding_x;
+
+     & ~ .inputbox  {
+      padding-left: 2.5 * ($input_padding_x) !important;
+    }
+  }
+
+  .inputbox{
+    position: relative;
+    appearance: none;
+    padding: $input_padding_y $input_padding_x;
+    margin: 0;
+    box-shadow: none !important;
+    border-radius: $input_border_radius;
+    background-color: $light;
+    font-weight: $input_font_weight;
+    transition: $input_transition;
+    outline: none;
+
+    &::placeholder{
+      color: $input_placeholder_color;
+    }
+  }
+
+  .inputbox{
+    width: 100%;
+    border: $input_border;
+    &:hover{
+      background-color: $input_active_background_color;
+      color: $gray;
+    }
+  }
+  &.selectbox{
+
+    & .selectbox-dropdown{
+      display: none;
+      flex-direction: column;
+      gap: calc($spacer / 4);
+      z-index: 10;
+      min-width: min-content;
+      max-height: 300px;
+      overflow-y: scroll;
+      padding: calc($spacer / 2);
+      margin-top: calc($spacer / 2);
+      background-color: $light;
+      color: contrastColor($light) !important;
+      box-shadow: 4px 6px 12px 4px rgba(0, 0, 0, 0.2);
+      border-radius: $input_border_radius;
+
+      &[show]{
+        display: flex;
+      }
+
+      option{
+        display: block;
+        min-height: fit-content !important;
+        padding: calc($input_padding_y / 3) calc($input_padding_x);
+        text-align: left;
+        border-radius: $input_border_radius;
+        transition: $input_transition;
+        background-color: inherit;
+
+        &:hover:not(:disabled), &:checked{
+          color: $light;
+          background-color: $light-gray !important;
+        }
+        &:first-child{
+          position: sticky;
+          top: calc(0rem - $input_padding_y);
+          color: inherit;
+          border-bottom: 1px solid $dark;
+          cursor: default;
+        }
+      }
+    }
+  }
+
+  button, .btn{
+    margin: 0;
+  }
+
+  @each $input_size in map-keys($input_sizes){
+    &.input-#{$input_size}{
+      @include inputSize($input_size);
+    }
+  }
+
+}

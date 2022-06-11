@@ -1,0 +1,48 @@
+@use 'sass:string';
+
+button, .btn{
+  font-family: inherit;
+  font-size: $btn_font_size;
+  color: contrastColor($light);
+  background-color: transparent;
+  display: inline-block;
+  text-align: center;
+  vertical-align: middle;
+  user-select: none;
+  box-shadow: none !important;
+  border: $btn_border;
+  border-radius: $btn_border_radius;
+  padding: $btn_padding_y $btn_padding_x;
+  margin: $btn_margin_y $btn_margin_x;
+  transition: $btn_transition;
+
+  &:hover, &:active{
+    cursor: pointer;
+  }
+  &:disabled{
+    cursor: not-allowed;
+  }
+
+  &.btn-circle{
+    min-width: 1.5rem;
+    min-height: 1.5rem;
+    border-radius: 100%;
+  }
+}
+
+@each $btn_variant in map-keys($btn_variants) {
+  $btn_color: map-get($btn_variants, $btn_variant);
+  $btn_active_color: map-get($btn_variants, 'light-#{$btn_variant}');
+  $btn_active_color: if($btn_active_color, $btn_active_color, if(lightness($btn_color) < $contrast_threshold - 20, lighten($btn_color, 10), darken($btn_color, 10))) ;
+  $is_light_variant: string.slice($btn_variant, 1, 6) == 'light';
+
+  .btn-#{$btn_variant}{
+    @include buttonVariant($btn_variant, $btn_color, $btn_active_color, $is_light_variant)
+  }
+}
+
+@each $btn_size in map-keys($input_sizes){
+  .btn-#{$btn_size}{
+    @include inputSize($btn_size);
+  }
+}

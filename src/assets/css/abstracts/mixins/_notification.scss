@@ -1,0 +1,7 @@
+@mixin notificationVariant($color){
+
+  .notification-item-badge{
+    background-color: $color !important;
+    color: contrastColor($color) !important;
+  }
+}

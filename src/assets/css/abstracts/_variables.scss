@@ -1,0 +1,96 @@
+// Colors
+$primary: #204080;
+$light_primary: #4F75C2;
+$danger: maroon;
+$success: #66bb66;
+$info: lightblue;
+$warning: orange;
+$error: #FF4E78;
+$light: #FFFFFF;
+$gray: #646464;
+$light_gray: #c4c4c4;
+$dark: #484848;
+$body_font_color: $dark;
+
+$colors: (
+  'primary': $primary,
+  'light-primary': $light_primary,
+  'danger': $danger,
+  'success': $success,
+  'info': $info,
+  'warning':$warning,
+  'error': $error,
+  'light': $light,
+  'gray': $gray,
+  'light-gray': $light_gray,
+  'dark': $dark,
+  'reset': $body_font_color,
+  'red': red,
+  'green': green,
+  'blue': blue,
+  );
+$contrast_threshold: 80%;
+
+// Spacer
+$spacer: 1rem;
+$spacers: ();
+@for $size from 1 through 10 {
+  $value: $size * .2;
+  $spacers: map-merge($spacers, ('#{$size}': $value) ); // 0.2 0.4 0.6 0.8 1.0 ... 2.0
+}
+
+
+// Font
+$body_font_family: 'Roboto', 'Arial';
+
+
+// UIInputGroup
+$input_group_margin_x: .2 * $spacer;
+$input_group_margin_y: .25 * $spacer;
+$input_group_label_font_size: 18px;
+
+// UIInput
+$input_font_size: 18px;
+$input_font_color: $body_font_color;
+$input_font_weight: 700;
+$input_placeholder_color: #64646480;
+$input_background_color: $light;
+$input_active_background_color: rgba(100, 100, 100, 0.08);
+$input_transition: all .3s;
+$input_border: 1.5px solid $dark;
+$input_active_border: 2px solid $dark;
+$input_border_radius: 12px;
+$input_padding_x: .625 * $spacer;
+$input_padding_y: .625 * $spacer;
+$input_sizes: (
+  'xs': map-get($spacers, '3' ),
+  'sm': map-get($spacers, '4' ),
+  'md': map-get($spacers, '5' ),
+  'lg': map-get($spacers, '6' ),
+  'xl': map-get($spacers, '7' ),
+);
+
+// Buttons
+$btn_variants: ();
+$btn_variants: map-merge($btn_variants , $colors );
+$btn_transition: all .3s;
+$btn_font_size: $input_font_size;
+$btn_padding_x: 1 * $spacer;
+$btn_padding_y: .5 * $spacer;
+$btn_margin_x: 0 * $spacer;
+$btn_margin_y: .25 * $spacer;
+$btn_border: 0px;
+$btn_outlined_border: 1px solid;
+$btn_border_radius: 12px;
+
+
+// Carousel
+$carousel_item_gap: $spacer;
+$carousel_visible_count: 3;
+$carousel_item_width: calc(100% / $carousel_visible_count);
+
+// Notification
+$notification_item_padding: $spacer $spacer * 2 $spacer $spacer;
+$notification_item_shadow: 0px $spacer 5px 0px $dark;
+$notification_badge_padding: calc($spacer / 2) $spacer;
+$notification_badge_radius: $spacer;

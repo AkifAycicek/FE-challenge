@@ -1,0 +1,24 @@
+@mixin buttonVariant($btn_variant, $btn_color, $btn_active_color, $is_light_variant) {
+  background-color: $btn_color !important;
+  color: contrastColor($btn_color);
+
+  &:hover, &:active{
+    background-color: $btn_active_color !important;
+    color: contrastColor($btn_active_color);
+  }
+  &.btn-outline{
+    @include buttonOutlinedVariant($btn_variant, $btn_color, $btn_active_color, $is_light_variant);
+  }
+}
+
+@mixin buttonOutlinedVariant($btn_variant, $btn_color, $btn_active_color, $is_light_variant){
+  color: $btn_color;
+  background-color: transparent !important;
+  border: $btn_outlined_border $btn_color !important;
+
+  &:hover, &:active{
+    color: $btn_active_color;
+    border-color: $btn_active_color;
+    box-shadow: inset 0px 0px 5px 0px lighten($btn_active_color, 10) !important;
+  }
+}
