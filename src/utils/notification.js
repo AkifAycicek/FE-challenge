@@ -1,6 +1,6 @@
 import { escapeHtml } from '@vue/shared';
 
-const defaultNotification = { title: 'Notification', body: 'Notification Body', variant: 'success' };
+const defaultNotification = { title: 'Notification', message: 'Notification message', variant: 'success' };
 
 let notificationContainer = document.querySelector('.notification');
 
@@ -13,14 +13,14 @@ export const showNotification = async (notification = defaultNotification) => {
       notificationContainer = element;
     }
 
-    const { title, body, variant } = notification;
+    const { title, message, variant } = notification;
     const id = '_' + Math.random().toString(16).substring(2, 10);
     const template = [
       `<div id="${id}" class="notification-item notification-item-${escapeHtml(variant)}">`,
       `<div class="notification-item-title">${escapeHtml(title)}</div>`,
       `<div class="notification-item-body">`,
       `<span class="notification-item-badge">${escapeHtml(variant)}</span>`,
-      `<span class="notification-item-content">${escapeHtml(body)}</span>`,
+      `<span class="notification-item-content">${escapeHtml(message)}</span>`,
       `</div>`,
       `<button class="notification-close-btn btn-sm">✖</button>`,
       `</div>`,
@@ -35,13 +35,22 @@ export const showNotification = async (notification = defaultNotification) => {
     if (closeButton) {
       closeButton.addEventListener('click', closeButtonClickEvent);
     }
+    return notificationItem;
   } catch (error) {
-    showNotification({ title: 'An error occurred', body: JSON.stringify(error), variant: 'error' });
-    console.error(error);
+    handleNotification(error);
   }
 };
 
-export const closeButtonClickEvent = (e) => {
+export const handleNotification = (notification = defaultNotification) => {
+  if (notification instanceof Error) {
+    const { name: title, message } = notification;
+    console.error(notification);
+    return showNotification({ title, message, variant: 'error' });
+  }
+  return showNotification(notification);
+};
+
+const closeButtonClickEvent = (e) => {
   try {
     e.target.parentElement.remove();
 
@@ -50,6 +59,6 @@ export const closeButtonClickEvent = (e) => {
       notificationContainer = null;
     }
   } catch (error) {
-    console.error(error);
+    handleNotification(error);
   }
 };

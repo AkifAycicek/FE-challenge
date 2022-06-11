@@ -1,21 +1,22 @@
 @mixin inputSize($size){
   $value: map-get($input_sizes, $size);
 
-  .inputbox{
+  &>.inputbox{
     padding: calc($value * $input_padding_y) calc($value * $input_padding_x);
     font-size: calc($value * $input_font_size)  !important;
   }
-  .btn, button{
+  &>.btn, &>button{
     padding: calc($value * $btn_padding_y) calc($value * $btn_padding_x);
     font-size: calc($value * $btn_font_size)  !important;
 
     &.btn-circle{
       width: $spacer * $value * 3;
       height: $spacer * $value * 3;
+      padding: .5 * $spacer !important;
     }
   }
 
-  .input-group-icon{
+  &>.input-group-icon{
     bottom: calc($value * $input_padding_y);
     left: calc($value * $input_padding_x);
     font-size: calc($value * $input_font_size);

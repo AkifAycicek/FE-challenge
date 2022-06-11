@@ -6,7 +6,28 @@
     <template #label v-if="label">
       <label :for="id" v-text="label" />
     </template>
-    <input class="inputbox" :id="id" type="text" :placeholder="$attrs.placeholder" />
+    <textarea
+      class="inputbox"
+      :id="id"
+      v-if="$attrs.type == 'textarea'"
+      cols="30"
+      rows="3"
+      :placeholder="$attrs.placeholder"
+      @change="$emit('update:modelValue', $event.target.value)"
+      @input="$emit('update:modelValue', $event.target.value)"
+      :value="modelValue"
+    />
+    <input
+      class="inputbox"
+      @change="$emit('update:modelValue', $event.target.value)"
+      @input="$emit('update:modelValue', $event.target.value)"
+      v-else
+      :value="modelValue"
+      :id="id"
+      type="text"
+      :placeholder="$attrs.placeholder"
+    />
+    <slot />
   </UIInputGroup>
 </template>
 

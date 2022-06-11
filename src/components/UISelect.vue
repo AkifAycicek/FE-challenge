@@ -34,7 +34,7 @@ const props = defineProps({
   },
   size: {
     type: String,
-    default: null,
+    default: 'md',
   },
   label: {
     type: String,

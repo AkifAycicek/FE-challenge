@@ -3,6 +3,7 @@
 button, .btn{
   font-family: inherit;
   font-size: $btn_font_size;
+  font-weight: inherit;
   color: contrastColor($light);
   background-color: transparent;
   display: inline-block;

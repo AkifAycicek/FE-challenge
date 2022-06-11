@@ -26,7 +26,11 @@
         </template>
         {{ i % 2 == 0 }}
       </UIButton>
-      <UIButton :variant="state.getRandomVariant()" size="xl" @click="showNotification(state.getRandomNotification())">
+      <UIButton
+        :variant="state.getRandomVariant()"
+        size="xl"
+        @click="handleNotification(state.getRandomNotification())"
+      >
         <template #icon>
           <i>💀</i>
         </template>
@@ -73,7 +77,7 @@
 
 <script setup>
 import { onBeforeMount, reactive } from '@vue/runtime-core';
-import { showNotification } from '@/utils/notification';
+import { handleNotification } from '@/utils/notification';
 import Http from '@/utils/httpClient';
 
 const state = reactive({
@@ -92,10 +96,11 @@ const state = reactive({
   errorMessage: () => (Math.round(Math.random()) && 'error occurred') || false,
   getRandomNotification: () => ({
     title: 'Title ' + Math.random().toString(16).substring(2, 10),
-    body: 'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates quo odio voluptatibus accusamus atque beatae architecto dolor earum voluptatem, nihil veniam quia. Reprehenderit, deleniti excepturi provident possimus nulla blanditiis rem?'.slice(
-      0,
-      -Math.random() * 200
-    ),
+    message:
+      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates quo odio voluptatibus accusamus atque beatae architecto dolor earum voluptatem, nihil veniam quia. Reprehenderit, deleniti excepturi provident possimus nulla blanditiis rem?'.slice(
+        0,
+        -Math.random() * 200
+      ),
     variant: state.getRandomVariant(),
   }),
   loading: false,
@@ -127,10 +132,15 @@ const loadPosts = async () => {
       post.info = `${date} by ${post.userId}`;
       return post;
     });
+    handleNotification({
+      title: 'success',
+      message: `between ${params.skip + 1}-${parseInt(params.skip) + parseInt(params.limit)} posts loaded `,
+      variant: 'success',
+    });
 
     state.pagination = { ...state.pagination, total };
   } catch (error) {
-    console.error(error);
+    handleNotification(error);
   } finally {
     state.loading = false;
   }

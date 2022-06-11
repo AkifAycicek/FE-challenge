@@ -1,6 +1,11 @@
 :root {
-  --carousel_item_width: #{$carousel_item_width};
-  --carousel_visible_count: #{$carousel_visible_count};
+  --carousel_visible_count: 3;
+  @media only screen and (max-width: 768px) {
+    --carousel_visible_count: 2;
+  }
+  @media only screen and (max-width: 425px) {
+    --carousel_visible_count: 1;
+  }
 }
 
 *,

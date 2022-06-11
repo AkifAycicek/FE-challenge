@@ -3,7 +3,6 @@
   display: inline-flex;
   flex-direction: column;
   gap: .2rem;
-  width: fit-content;
   margin: $input_group_margin_y $input_group_margin_x;
 
   &[loading]:not([loading=false]){
@@ -13,9 +12,9 @@
   }
 
   &[error]:not([error=false]){
-    margin-bottom: $input_group_margin_y * 5 !important;
+    margin-bottom: 1rem !important;
 
-    .inputbox, .selectbox, .btn, button{
+    &>.inputbox, &>.selectbox, &>.btn, &>button, &>.input-group-label{
       &:not(.btn, button){
       color: $error !important;
     }
@@ -50,13 +49,14 @@
     z-index: 2;
     position: absolute;
     left: $input_padding_x;
+    bottom: $input_padding_y;
 
-     & ~ .inputbox  {
-      padding-left: 2.5 * ($input_padding_x) !important;
+    & ~ .inputbox  {
+      padding-left: 4 * ($input_padding_x) !important;
     }
   }
 
-  .inputbox{
+  &>.inputbox{
     position: relative;
     appearance: none;
     padding: $input_padding_y $input_padding_x;
@@ -64,23 +64,22 @@
     box-shadow: none !important;
     border-radius: $input_border_radius;
     background-color: $light;
+    font-family: $body_font_family;
     font-weight: $input_font_weight;
     transition: $input_transition;
     outline: none;
-
-    &::placeholder{
-      color: $input_placeholder_color;
-    }
-  }
-
-  .inputbox{
     width: 100%;
     border: $input_border;
     &:hover{
       background-color: $input_active_background_color;
       color: $gray;
     }
+
+    &::placeholder{
+      color: $input_placeholder_color;
+    }
   }
+
   &.selectbox{
 
     & .selectbox-dropdown{
