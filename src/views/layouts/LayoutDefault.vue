@@ -1,5 +1,12 @@
 <template>
-  <router-view></router-view>
+  <div class="default">
+    <div class="default-content">
+      <router-view></router-view>
+    </div>
+    <DefaultFooter> </DefaultFooter>
+  </div>
 </template>
 
-<script setup></script>
+<script setup>
+import DefaultFooter from './DefaultFooter.vue';
+</script>

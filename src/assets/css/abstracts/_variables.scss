@@ -94,3 +94,9 @@ $notification_item_padding: $spacer $spacer * 2 $spacer $spacer;
 $notification_item_shadow: 0px $spacer 5px 0px $dark;
 $notification_badge_padding: calc($spacer / 2) $spacer;
 $notification_badge_radius: $spacer;
+
+
+// Layouts
+//// Default Layout
+$default_footer_padding: $spacer * 2;
+$default_footer_background: #294e98b8;
