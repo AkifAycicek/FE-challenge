@@ -6,6 +6,7 @@ import LayoutDefaultPage from '@/views/layouts/LayoutDefaultPage.vue';
 // Pages
 import PlayGround from '@/views/pages/PlayGround.vue';
 import LandingPage from '@/views/pages/LandingPage.vue';
+import ListPage from '@/views/pages/ListPage.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -26,6 +27,13 @@ const router = createRouter({
         {
           path: '',
           component: LayoutDefaultPage,
+          children: [
+            {
+              path: 'list',
+              name: 'ListPage',
+              component: ListPage,
+            },
+          ],
         },
         {
           path: 'playground',
