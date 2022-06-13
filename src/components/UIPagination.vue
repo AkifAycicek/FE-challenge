@@ -51,11 +51,11 @@
 
       <UISelect
         outline
-        :items="perPageItems"
+        :items="limitOptions"
         size="sm"
         :variant="variant"
-        :label="`Per Page: ${modelValue.perPage}`"
-        :modelValue="modelValue.perPage"
+        :label="`Per Page: ${modelValue.limit}`"
+        :modelValue="modelValue.limit"
         @change="changePage(1, $event.target.value)"
       />
     </div>
@@ -71,8 +71,8 @@ const props = defineProps({
     type: Object,
     required: true,
     default: () => ({
-      perPage: 1,
-      currentPage: 1,
+      limit: 1,
+      skip: 0,
       total: 1,
       maxVisible: 1,
     }),
@@ -85,7 +85,7 @@ const props = defineProps({
     type: String,
     default: 'sm', // xs,sm,md,lg,xl
   },
-  perPageItems: {
+  limitOptions: {
     type: Array,
     default: () => [
       { value: 5, text: 5 },
@@ -98,11 +98,11 @@ const props = defineProps({
 });
 
 const state = reactive({
-  perPage: computed(() => props.modelValue.perPage),
-  currentPage: computed(() => props.modelValue.currentPage),
+  limit: computed(() => props.modelValue.limit),
+  currentPage: computed(() => props.modelValue.skip / props.modelValue.limit + 1),
   total: computed(() => props.modelValue.total),
   maxVisible: computed(() => props.modelValue.maxVisible),
-  lastPage: computed(() => Math.round(state.total / state.perPage + 0.4)),
+  lastPage: computed(() => Math.round(state.total / state.limit + 0.4)),
 
   leftPages: computed(() =>
     [...Array(Math.min(state.maxVisible, state.lastPage))]
@@ -120,8 +120,9 @@ const state = reactive({
   }),
 });
 
-const changePage = async (currentPage = state.currentPage, perPage = state.perPage) => {
-  await emit('update:modelValue', { ...props.modelValue, currentPage, perPage });
-  await emit('change', { ...props.modelValue, currentPage, perPage });
+const changePage = async (currentPage = state.currentPage, limit = state.limit) => {
+  const skip = (currentPage - 1) * limit;
+  await emit('update:modelValue', { ...props.modelValue, skip, limit });
+  await emit('change', { ...props.modelValue, skip, limit });
 };
 </script>

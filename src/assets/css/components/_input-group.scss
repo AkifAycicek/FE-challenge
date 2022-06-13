@@ -5,13 +5,13 @@
   gap: .2rem;
   margin: $input_group_margin_y $input_group_margin_x;
 
-  &[loading]:not([loading=false]){
+  &[loading]:not([loading='false']){
     .inputbox, .selectbox, .btn, button{
       cursor: wait !important;
     }
   }
 
-  &[error]:not([error=false]){
+  &[error]:not([error='']){
     margin-bottom: 1rem !important;
 
     &>.inputbox, &>.selectbox, &>.btn, &>button, &>.input-group-label{

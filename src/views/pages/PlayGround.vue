@@ -8,7 +8,7 @@
         :size="size"
         :key="'btn_' + i"
         :error="state.errorMessage()"
-        :circle="Math.round(Math.random())"
+        :circle="state.getRandomBoolean()"
       >
         <template #icon>
           <i>♥</i>
@@ -70,89 +70,72 @@
         <option value="with template 2">with template 2</option>
       </UISelect>
     </div>
-    <UICarousel :modelValue="state.posts" />
-    <UIPagination v-model="state.pagination" :disabled="state.loading" :loading="state.loading" @change="pageChanged" />
+    <UICarousel :modelValue="posts.data" />
+    <UIPagination v-model="posts.pagination" :disabled="posts.loading" :loading="posts.loading" @change="pageChanged" />
   </div>
 </template>
 
 <script setup>
-import { onBeforeMount, reactive } from '@vue/runtime-core';
+import { reactive } from '@vue/runtime-core';
 import { handleNotification } from '@/utils/notification';
-import Http from '@/utils/httpClient';
+import useUsers from '@/composables/useUsers';
 
 const state = reactive({
-  posts: [],
-  sizes: ['xs', 'sm', 'md', 'lg', 'xl'],
-  selectOptions: [...Array(15)].map((e, i) => ({ value: `with_prop_${i + 1}`, text: `with prop ${i + 1}` })),
-  selectValue: null,
-  pagination: {
-    perPage: 5,
-    currentPage: 1,
-    total: 1,
-    maxVisible: 3,
-  },
-  getRandomVariant: () => ['primary', 'warning', 'success', 'error', 'danger', 'info'][Math.round(Math.random() * 5)],
-  getRandomBoolean: () => [true, false][Math.round(Math.random())],
-  errorMessage: () => (Math.round(Math.random()) && 'error occurred') || false,
-  getRandomNotification: () => ({
-    title: 'Title ' + Math.random().toString(16).substring(2, 10),
-    message:
-      'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates quo odio voluptatibus accusamus atque beatae architecto dolor earum voluptatem, nihil veniam quia. Reprehenderit, deleniti excepturi provident possimus nulla blanditiis rem?'.slice(
-        0,
-        -Math.random() * 200
-      ),
-    variant: state.getRandomVariant(),
+    sizes: ['xs', 'sm', 'md', 'lg', 'xl'],
+    selectOptions: [...Array(15)].map((e, i) => ({ value: `with_prop_${i + 1}`, text: `with prop ${i + 1}` })),
+    selectValue: null,
+    getRandomVariant: () => ['primary', 'warning', 'success', 'error', 'danger', 'info'][Math.round(Math.random() * 5)],
+    getRandomBoolean: () => [true, false][Math.round(Math.random())],
+    errorMessage: () => (Math.round(Math.random()) && 'error occurred') || null,
+    getRandomNotification: () => ({
+      title: 'Title ' + Math.random().toString(16).substring(2, 10),
+      message:
+        'Lorem ipsum dolor sit amet, consectetur adipisicing elit. Voluptates quo odio voluptatibus accusamus atque beatae architecto dolor earum voluptatem, nihil veniam quia. Reprehenderit, deleniti excepturi provident possimus nulla blanditiis rem?'.slice(
+          0,
+          -Math.random() * 200
+        ),
+      variant: state.getRandomVariant(),
+    }),
+    paragraphs: [
+      'Excepteur laborum enim, porchetta beef ribs et capicola.  Leberkas aliquip duis tenderloin.  Kevin short loin shankle commodo officia.  T-bone deserunt chicken dolore picanha id ut salami esse ex cupidatat occaecat velit.  Burgdoggen do .',
+      'Alcatra kevin commodo strip steak.  Jowl incididunt corned beef cillum occaecat turkey andouille.  Strip steak voluptate ullamco fugiat bacon anim.  Flank nostrud turducken ut, commodo cupim ipsum anim shoulder beef proident beef ribs nu.',
+      'In drumstick ham ham hock exercitation jowl ball tip. Jowl incididunt corned beef cillum occaecat turkey andouille.  Strip steak voluptate ullamco fugiat bacon anim.',
+      'Irure pig lorem laborum landjaeger tempor eiusmod ut porchetta.Leberkas aliquip duis tenderloin.  Kevin short loin shankle commodo officia.  T-bone deserunt chicken dolore picanha id ut salami esse ex cupidatat occaecat velit.',
+      'Shankle minim alcatra, aliquip pancetta corned beef laborum buffalo picanha mollit. Jowl incididunt corned beef cillum occaecat turkey andouille.  Strip steak voluptate ullamco fugiat bacon anim.',
+    ],
   }),
-  loading: false,
-});
-
-const pageChanged = async () => {
-  await loadPosts();
-};
-
-const loadPosts = async () => {
-  try {
-    state.loading = true;
-    const params = {
-      skip: (state.pagination.currentPage - 1) * state.pagination.perPage,
-      limit: state.pagination.perPage,
-    };
-
-    const { data } = await Http.get('posts', { params });
-    const { posts, total } = data;
-
-    state.posts = posts.map((post) => {
-      const date = new Date(Math.random() * Date.now()).toLocaleDateString('en-GB', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
+  posts = reactive(useUsers()),
+  pageChanged = async () => {
+    await loadPosts();
+  },
+  loadPosts = async () => {
+    try {
+      await posts.loadUsers(posts.pagination);
+      posts.data.map((post) => {
+        const date = new Date(Math.random() * Date.now()).toLocaleDateString('en-GB', {
+          weekday: 'long',
+          year: 'numeric',
+          month: 'long',
+          day: 'numeric',
+        });
+        post.title = state.paragraphs[Math.round(Math.random() * (state.paragraphs.length - 1))];
+        post.src = post.image;
+        post.info = `${date} by ${post.username}`;
+        return post;
       });
-      post.src = 'https://picsum.photos/200/300';
-      post.info = `${date} by ${post.userId}`;
-      return post;
-    });
-    handleNotification({
-      title: 'success',
-      message: `between ${params.skip + 1}-${parseInt(params.skip) + parseInt(params.limit)} posts loaded `,
-      variant: 'success',
-    });
-
-    state.pagination = { ...state.pagination, total };
-  } catch (error) {
-    handleNotification(error);
-  } finally {
-    state.loading = false;
-  }
-};
-
-onBeforeMount(async () => {
-  await loadPosts();
-  state.pagination = {
-    ...state.pagination,
-    totalItems: state.posts.length,
+      handleNotification({
+        title: 'success',
+        message: `between ${parseInt(posts.pagination.skip) + 1}-${
+          parseInt(posts.pagination.skip) + parseInt(posts.pagination.limit)
+        } posts loaded `,
+        variant: 'success',
+      });
+    } catch (error) {
+      handleNotification(error);
+    }
   };
-});
+
+loadPosts();
 </script>
 
 <style lang="scss">

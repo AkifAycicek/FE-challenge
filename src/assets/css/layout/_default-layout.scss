@@ -1,14 +1,36 @@
 .default {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
   min-height: 100vh;
 
   &-content{
+    flex: 1;
+    display: flex;
     padding: $spacer $spacer * 4;
   }
 
+  &-page {
+    flex: 1;
+    display: flex;
+    flex-wrap: wrap;
+    gap: $spacer;
+    &-header {
+      &-logo {
+        width: 140px !important;
+        height: auto;
+        object-fit: contain;
+      }
+    }
+
+    &-content {
+      flex: 1;
+      display: flex;
+    }
+  }
+
   &-footer {
+    width: 100%;
+    align-self: flex-end;
     display: flex;
     gap: $spacer;
     justify-content: space-between;
@@ -54,6 +76,13 @@
   }
   // <=Tablet
   @media only screen and (max-width: 768px) {
+
+    &-page{
+      &-content{
+        min-width: 100%;
+      }
+    }
+
     &-content{
       padding: $spacer $spacer;
     }
