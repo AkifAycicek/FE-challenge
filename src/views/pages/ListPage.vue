@@ -6,9 +6,7 @@
           :modelValue="form.search"
           class="search-page-search-input"
           @input="state.search = $event.target.value.trim()"
-          @keyup.enter="
-            form.isValid().then((valid) => valid && debounceFn(() => users.loadUsers({ ...state.route.query }), 500))
-          "
+          @keyup.enter="form.isValid() && debounceFn(() => users.loadUsers({ ...state.route.query }), 500)"
           :placeholder="`Name, username or email`"
           :error="form.errors.get('search').join(' ')"
         >
@@ -17,7 +15,7 @@
         <UIButton
           variant="primary"
           class="search-page-search-btn"
-          @click="users.loadUsers({ ...state.route.query })"
+          @click="form.isValid() && users.loadUsers({ ...state.route.query })"
           :loading="users.loading"
           :disabled="users.loading || form.errors.has('search')"
           :error="form.errors.get('search').length > 0 ? ' ' : ''"
@@ -25,7 +23,9 @@
           Search
         </UIButton>
       </div>
-      <UIButton variant="primary" @click="$router.push({ name: 'PlayGround' })"> Add new record </UIButton>
+      <UIButton variant="primary" @click="$router.push({ name: 'AddRecord', query: { backToPage: $route.name } })">
+        Add new record
+      </UIButton>
     </div>
     <div class="search-page-result">
       <div class="search-page-result-item" v-for="user in users.data" :key="user.userName">
@@ -45,7 +45,7 @@
     </div>
     <UIPagination
       v-model="users.pagination"
-      :disabled="users.loading || !!form.errors.get('search').join('')"
+      :disabled="users.loading || users.data.length <= 0 || form.errors.has('search')"
       size="xs"
       :loading="users.loading"
       @change="$router.push({ query: { ...$route.query, skip: $event.skip, limit: $event.limit } })"
@@ -57,7 +57,7 @@
 import { useRoute, useRouter } from 'vue-router';
 import debounceFn from '@/utils/debounceFn';
 import { computed } from '@vue/reactivity';
-import { reactive, watch } from '@vue/runtime-core';
+import { reactive, watch, onMounted } from '@vue/runtime-core';
 import useUsers from '@/composables/useUsers';
 import useForm from '@/composables/useForm';
 import { handleNotification } from '@/utils/notification';
@@ -83,7 +83,7 @@ const state = reactive({
       },
     }),
   }),
-  form = reactive(useForm({ search: state.route.query.q }, { search: `required|min:${state.minSearchLetters}` })),
+  form = useForm({ search: state.route.query.q }, { search: `required|min:${state.minSearchLetters}` }),
   users = reactive(useUsers()),
   searchHightlight = (text = '') => {
     return text.replace(
@@ -92,18 +92,31 @@ const state = reactive({
     );
   };
 
+onMounted(async () => {
+  if (state.route.query.q && form.isValid()) {
+    users.loadUsers(state.route.query);
+  }
+});
+
 watch(
   // first parameter is route query without the q (state.search) used for input search, second is q's itself
   // eslint-disable-next-line no-unused-vars
   () => [(({ q, ...query }) => query)(state.route.query), state.route.query.q],
-  async ([query, q] = [], [oldQuery, oldQ] = []) => {
+  async (
+    [query, q] = [
+      /**newVal */
+    ],
+    [oldQuery, oldQ] = [
+      /**oldVal */
+    ]
+  ) => {
     try {
       users.data = [];
       form.search = q;
-      if (await !form.isValid()) return;
+      if (!form.isValid()) return;
 
       // pagination changed or page loaded
-      if (JSON.stringify(query) != JSON.stringify(oldQuery) && (q == oldQ || !oldQ)) {
+      if (JSON.stringify(query) != JSON.stringify(oldQuery) && q == oldQ) {
         await users.loadUsers({ ...state.route.query });
       }
     } catch (error) {
