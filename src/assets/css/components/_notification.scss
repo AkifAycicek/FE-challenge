@@ -16,7 +16,7 @@
     width: 5px !important;
   }
 
-  @keyframes notificationItemAnimation {
+  @keyframes notificationItemOpenAnimation {
     from{
       transform: scale(.1, .1);
       transform-origin: right center;
@@ -41,7 +41,15 @@
     max-width: calc(350px - $spacer);
     pointer-events: all;
     box-shadow:   $notification_item_shadow;
-    animation: notificationItemAnimation cubic-bezier(0.3, 1.2, 0.3, 1) .4s;
+    transition: all .3s;
+
+    &.open{
+      animation: notificationItemOpenAnimation cubic-bezier(0.3, 1.2, 0.3, 1) .4s;
+    }
+
+    &.close{
+      animation: notificationItemOpenAnimation reverse cubic-bezier(0.3, 1.2, 0.3, 1) .4s !important;
+    }
 
     &-title{
       width: 100%;
@@ -62,7 +70,7 @@
         float: right;
         padding: $notification_badge_padding;
         margin: calc($spacer / 2);
-        margin-top: -$spacer !important;
+        margin-top: calc($spacer / -2) !important;
         background-color: $primary;
         color: contrastColor($primary);
         border-radius: $btn-border-radius;

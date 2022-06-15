@@ -129,6 +129,7 @@ const state = reactive({
           parseInt(posts.pagination.skip) + parseInt(posts.pagination.limit)
         } posts loaded `,
         variant: 'success',
+        closeIn: 0,
       });
     } catch (error) {
       handleNotification(error);
