@@ -1,7 +1,9 @@
 <template>
   <div class="landing-page">
     <div class="landing-page-header">
-      <UIButton variant="primary" @click="$router.push({ name: 'PlayGround' })"> Add new record </UIButton>
+      <UIButton variant="primary" @click="$router.push({ name: 'AddRecord', query: { backToPage: $route.name } })">
+        Add new record
+      </UIButton>
     </div>
     <div class="landing-page-logo">
       <img :src="require('@/assets/logo.png')" alt="logo" />

@@ -7,6 +7,7 @@ import LayoutDefaultPage from '@/views/layouts/LayoutDefaultPage.vue';
 import PlayGround from '@/views/pages/PlayGround.vue';
 import LandingPage from '@/views/pages/LandingPage.vue';
 import ListPage from '@/views/pages/ListPage.vue';
+import AddRecord from '@/views/pages/AddRecord.vue';
 
 const router = createRouter({
   history: createWebHistory(),
@@ -27,11 +28,17 @@ const router = createRouter({
         {
           path: '',
           component: LayoutDefaultPage,
+          props: (route) => ({ backToPage: { name: route.query.backToPage } }),
           children: [
             {
               path: 'list',
               name: 'ListPage',
               component: ListPage,
+            },
+            {
+              path: 'add-record',
+              name: 'AddRecord',
+              component: AddRecord,
             },
           ],
         },
