@@ -1,4 +1,14 @@
-# tesodev
+# Frontend Challenge App
+
+### <span style="color: darkgoldenrod">📢Please allow notifications at the first run ⚠</span>
+
+```
+if (you_wanna_try_components == true){
+  process.env.NODE_ENV = 'development'; // i mean `yarn serve` 😊
+  router.push({path: 'playground'})
+  // and... please don't spam the skull
+}
+```
 
 ## Project setup
 ```
